@@ -35,7 +35,7 @@ export class VideoController extends HTMLElement {
     this._video = null;
   }
   connectedCallback() {
-    const video = this.nextElementSibling;
+    const video = this.previousElementSibling;
     if (video && video.nodeName === "VIDEO") {
       this._video = video;
       this._shadowRoot = this.attachShadow({ mode: "open" }); // { mode, host, innerHTML }
@@ -45,7 +45,8 @@ export class VideoController extends HTMLElement {
       this.update();
 
       video.ontimeupdate = () => { this.update(); }
-      this.zoom(4);
+      this.zoom();
+      this.zoom();
     }
   }
   disconnectedCallback() { }
@@ -72,19 +73,19 @@ export class VideoController extends HTMLElement {
           `${v.currentTime.toFixed(1)}/${v.duration.toFixed(1)}`;
     }
   }
-  zoom(n = 1.5) {
+  zoom() {
     const obj = getComputedStyle(this._video);
     const width = parseFloat(obj.width);
     const height = parseFloat(obj.height);
-    this._video.attributeStyleMap.set("width",  CSS.px(width  * n));
-    this._video.attributeStyleMap.set("height", CSS.px(height * n));
+    this._video.attributeStyleMap.set("width",  CSS.px(width  * 1.5));
+    this._video.attributeStyleMap.set("height", CSS.px(height * 1.5));
   }
-  reduce(n = 1.5) {
+  reduce() {
     const obj = getComputedStyle(this._video);
     const width = parseFloat(obj.width);
     const height = parseFloat(obj.height);
-    this._video.attributeStyleMap.set("width",  CSS.px(width  / n));
-    this._video.attributeStyleMap.set("height", CSS.px(height / n));
+    this._video.attributeStyleMap.set("width",  CSS.px(width  / 1.5));
+    this._video.attributeStyleMap.set("height", CSS.px(height / 1.5));
   }
 }
 
