@@ -37,7 +37,7 @@ export class VideoController extends HTMLElement {
   connectedCallback() {
     const video = this.previousElementSibling;
     if (video && video.nodeName === "VIDEO") {
-      video.effected = true;
+      video.setAttribute("hacked", "YES");
       this._video = video;
       this._shadowRoot = this.attachShadow({ mode: "open" }); // { mode, host, innerHTML }
       this._shadowRoot.innerHTML = VIDEO_CONTROLLER_TEMPLATE;
