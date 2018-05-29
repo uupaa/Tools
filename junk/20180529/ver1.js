@@ -5,6 +5,8 @@ import { save, load } from "https://uupaa.github.io/Tools/junk/20180529/UserSele
   if (!v.effected) {
     v.insertAdjacentHTML("afterend",
       `<div style="font-size: 300%" onclick="hack(this, this.previousElementSibling)">🎃</div>`);
+  } else {
+    console.log("effected");
   }
 });
 
