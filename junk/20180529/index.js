@@ -1,5 +1,5 @@
-import { hack } from "https://uupaa.github.io/Tools/junk/20180529/hack.js";
+import { VideoController } from "https://uupaa.github.io/Tools/junk/20180529/VideoController.js";
 
 [...document.body.querySelectorAll("video")].forEach(v => {
-  v.insertAdjacentHTML("afterend", `<div style="font-size:x-large" onclick="hack(this, this.previousElementSibling)">🎃</div>`);
+  v.insertAdjacentHTML("afterend", `<video-controller></video-controller>`);
 });
