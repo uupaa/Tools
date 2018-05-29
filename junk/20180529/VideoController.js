@@ -45,6 +45,8 @@ export class VideoController extends HTMLElement {
       this.update();
 
       video.ontimeupdate = () => { this.update(); }
+      this.zoom();
+      this.zoom();
     }
   }
   disconnectedCallback() { }
@@ -57,20 +59,8 @@ export class VideoController extends HTMLElement {
     this._shadowRoot.querySelector(".m01").onclick    = () => { v.currentTime -= 0.1; }
     this._shadowRoot.querySelector(".p01").onclick    = () => { v.currentTime += 0.1; }
     this._shadowRoot.querySelector(".p10").onclick    = () => { v.currentTime += 1.0; }
-    this._shadowRoot.querySelector(".zoom").onclick   = () => {
-      const obj = getComputedStyle(v);
-      const width = parseFloat(obj.width);
-      const height = parseFloat(obj.height);
-      v.attributeStyleMap.set("width",  CSS.px(width  * 1.5));
-      v.attributeStyleMap.set("height", CSS.px(height * 1.5));
-    }
-    this._shadowRoot.querySelector(".reduce").onclick = () => {
-      const obj = getComputedStyle(v);
-      const width = parseFloat(obj.width);
-      const height = parseFloat(obj.height);
-      v.attributeStyleMap.set("width",  CSS.px(width  / 1.5));
-      v.attributeStyleMap.set("height", CSS.px(height / 1.5));
-    }
+    this._shadowRoot.querySelector(".zoom").onclick   = () => { this.zoom(); }
+    this._shadowRoot.querySelector(".reduce").onclick = () => { this.reduce(); }
     this._shadowRoot.querySelector(".x01").onclick    = () => { v.playbackRate = 0.1; }
     this._shadowRoot.querySelector(".x10").onclick    = () => { v.playbackRate = 1.0; }
     this._shadowRoot.querySelector(".x20").onclick    = () => { v.playbackRate = 2.0; }
@@ -82,6 +72,20 @@ export class VideoController extends HTMLElement {
       this._shadowRoot.querySelector(".time").textContent =
           `${v.currentTime.toFixed(1)}/${v.duration.toFixed(1)}`;
     }
+  }
+  zoom() {
+    const obj = getComputedStyle(this._video);
+    const width = parseFloat(obj.width);
+    const height = parseFloat(obj.height);
+    this._video.attributeStyleMap.set("width",  CSS.px(width  * 1.5));
+    this._video.attributeStyleMap.set("height", CSS.px(height * 1.5));
+  }
+  reduce() {
+    const obj = getComputedStyle(this._video);
+    const width = parseFloat(obj.width);
+    const height = parseFloat(obj.height);
+    this._video.attributeStyleMap.set("width",  CSS.px(width  / 1.5));
+    this._video.attributeStyleMap.set("height", CSS.px(height / 1.5));
   }
 }
 
