@@ -45,8 +45,7 @@ export class VideoController extends HTMLElement {
       this.update();
 
       video.ontimeupdate = () => { this.update(); }
-      this.zoom();
-      this.zoom();
+      this.zoom(4);
     }
   }
   disconnectedCallback() { }
@@ -73,19 +72,19 @@ export class VideoController extends HTMLElement {
           `${v.currentTime.toFixed(1)}/${v.duration.toFixed(1)}`;
     }
   }
-  zoom() {
+  zoom(n = 1.5) {
     const obj = getComputedStyle(this._video);
     const width = parseFloat(obj.width);
     const height = parseFloat(obj.height);
-    this._video.attributeStyleMap.set("width",  CSS.px(width  * 1.5));
-    this._video.attributeStyleMap.set("height", CSS.px(height * 1.5));
+    this._video.attributeStyleMap.set("width",  CSS.px(width  * n));
+    this._video.attributeStyleMap.set("height", CSS.px(height * n));
   }
-  reduce() {
+  reduce(n = 1.5) {
     const obj = getComputedStyle(this._video);
     const width = parseFloat(obj.width);
     const height = parseFloat(obj.height);
-    this._video.attributeStyleMap.set("width",  CSS.px(width  / 1.5));
-    this._video.attributeStyleMap.set("height", CSS.px(height / 1.5));
+    this._video.attributeStyleMap.set("width",  CSS.px(width  / n));
+    this._video.attributeStyleMap.set("height", CSS.px(height / n));
   }
 }
 
