@@ -2,11 +2,11 @@ import { VideoController } from "https://uupaa.github.io/Tools/junk/20180529/Vid
 import { save, load } from "https://uupaa.github.io/Tools/junk/20180529/UserSelectSerializer.js";
 
 [...document.body.querySelectorAll("video")].forEach(v => {
-  if (!v.effected) {
+  if (!v.getAttribute("hacked")) {
     v.insertAdjacentHTML("afterend",
       `<div style="font-size: 300%" onclick="hack(this, this.previousElementSibling)">🎃</div>`);
   } else {
-    console.log("effected");
+    console.log("hacked");
   }
 });
 
