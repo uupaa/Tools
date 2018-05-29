@@ -13,7 +13,7 @@ import { VideoController } from "https://uupaa.github.io/Tools/junk/20180529/Vid
 
 window.hack = (jack, video) => {
   jack.remove();
-  jack.parentNode.insertAdjacentHTML("afterend", `<video-controller></video-controller>`);
+  video.insertAdjacentHTML("afterend", `<video-controller></video-controller>`);
 };
 
 
