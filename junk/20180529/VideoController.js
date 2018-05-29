@@ -1,26 +1,24 @@
 const VIDEO_CONTROLLER_TEMPLATE = `
 <style>
-  .container { display: flex; user-select: none; outline: solid blue 1px; }
-  .time   { mergin: 0 5px; width: 100px; height: 2em; text-align: center }
-  .play   { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .r10    { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .r1     { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .f1     { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .f10    { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .zoom   { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .reduce { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .x01    { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .x10    { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .x20    { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
-  .x50    { outline: 1px solid gray; width: 70px; height: 3em; text-align: center }
+  .container { display: flex; user-select: none; outline: solid blue 1px; font-size: 9pt; }
+  .play   { outline: 1px solid gray; width: 100px; height: 3em; text-align: center }
+  .m10    { outline: 1px solid gray; width: 50px; height: 3em; text-align: center }
+  .m01    { outline: 1px solid gray; width: 50px; height: 3em; text-align: center }
+  .p01    { outline: 1px solid gray; width: 50px; height: 3em; text-align: center }
+  .p10    { outline: 1px solid gray; width: 50px; height: 3em; text-align: center }
+  .zoom   { outline: 1px solid gray; width: 50px; height: 3em; text-align: center }
+  .reduce { outline: 1px solid gray; width: 50px; height: 3em; text-align: center }
+  .x01    { outline: 1px solid gray; width: 30px; height: 3em; text-align: center }
+  .x10    { outline: 1px solid gray; width: 30px; height: 3em; text-align: center }
+  .x20    { outline: 1px solid gray; width: 30px; height: 3em; text-align: center }
+  .x50    { outline: 1px solid gray; width: 30px; height: 3em; text-align: center }
 </style>
 <div class="container">
-  <div class="play"⏯</div>
-  <div class="time">0 / 0</div>
-  <div class="r10">⏪(-1.0)</div>
-  <div class="r10">◀️(-0.1)</div>
-  <div class="f10">▶️(+0.1)</div>
-  <div class="f10">⏩(+1.0)</div>
+  <div class="play">▶️/⏸ <br><span class="time">0/0</span></div>
+  <div class="m10">◀️◀️<br>-1.0</div>
+  <div class="m01">◀️<br>-0.1</div>
+  <div class="p01">▶️<br>+0.1</div>
+  <div class="p10">▶️▶️<br>+1.0</div>
   <div class="zoom">zoom</div>
   <div class="reduce">reduce</div>
   <div class="x01">x.1</div>
@@ -31,13 +29,13 @@ const VIDEO_CONTROLLER_TEMPLATE = `
 `;
 
 export class VideoController extends HTMLElement {
-  static get tag() { return "<video-controller>"; }
+  static get tag() { return "video-controller"; }
   constructor() {
     super();
     this._video = null;
   }
   connectedCallback() {
-    const video = this.previousElementSibling;
+    const video = this.nextElementSibling;
     if (video && video.nodeName === "VIDEO") {
       this._video = video;
       this._shadowRoot = this.attachShadow({ mode: "open" }); // { mode, host, innerHTML }
@@ -55,12 +53,24 @@ export class VideoController extends HTMLElement {
   attachHandler() {
     const v = this._video;
     this._shadowRoot.querySelector(".play").onclick   = () => { v.paused ? v.play() : v.pause(); };
-    this._shadowRoot.querySelector(".r10").onclick    = () => { v.currentTime -= 1.0; }
-    this._shadowRoot.querySelector(".r01").onclick    = () => { v.currentTime -= 0.1; }
-    this._shadowRoot.querySelector(".f01").onclick    = () => { v.currentTime += 0.1; }
-    this._shadowRoot.querySelector(".f10").onclick    = () => { v.currentTime += 1.0; }
-    this._shadowRoot.querySelector(".zoom").onclick   = () => { v.width *= 1.5; v.height *= 1.5; }
-    this._shadowRoot.querySelector(".reduce").onclick = () => { v.width /= 1.5; v.height /= 1.5; }
+    this._shadowRoot.querySelector(".m10").onclick    = () => { v.currentTime -= 1.0; }
+    this._shadowRoot.querySelector(".m01").onclick    = () => { v.currentTime -= 0.1; }
+    this._shadowRoot.querySelector(".p01").onclick    = () => { v.currentTime += 0.1; }
+    this._shadowRoot.querySelector(".p10").onclick    = () => { v.currentTime += 1.0; }
+    this._shadowRoot.querySelector(".zoom").onclick   = () => {
+      const obj = getComputedStyle(v);
+      const width = parseFloat(obj.width);
+      const height = parseFloat(obj.height);
+      v.attributeStyleMap.set("width",  CSS.px(width  * 1.5));
+      v.attributeStyleMap.set("height", CSS.px(height * 1.5));
+    }
+    this._shadowRoot.querySelector(".reduce").onclick = () => {
+      const obj = getComputedStyle(v);
+      const width = parseFloat(obj.width);
+      const height = parseFloat(obj.height);
+      v.attributeStyleMap.set("width",  CSS.px(width  / 1.5));
+      v.attributeStyleMap.set("height", CSS.px(height / 1.5));
+    }
     this._shadowRoot.querySelector(".x01").onclick    = () => { v.playbackRate = 0.1; }
     this._shadowRoot.querySelector(".x10").onclick    = () => { v.playbackRate = 1.0; }
     this._shadowRoot.querySelector(".x20").onclick    = () => { v.playbackRate = 2.0; }
@@ -68,8 +78,10 @@ export class VideoController extends HTMLElement {
   }
   update() {
     const v = this._video;
-    this._shadowRoot.querySelector(".time").textContent =
-        `${v.currentTime.toFixed(1)} / ${v.duration.toFixed(1)}`;
+    if (v && v.duration) {
+      this._shadowRoot.querySelector(".time").textContent =
+          `${v.currentTime.toFixed(1)}/${v.duration.toFixed(1)}`;
+    }
   }
 }
 
