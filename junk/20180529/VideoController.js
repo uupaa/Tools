@@ -54,13 +54,13 @@ export class VideoController extends HTMLElement {
   adoptedCallback() { }
   attachHandler() {
     const v = this._video;
-    this._shadowRoot.querySelector(".play").onclick   = () => { v.paused ? v.play() : v.pause(); };
+    this._shadowRoot.querySelector(".play").onclick   = () => this.togglePlay();
     this._shadowRoot.querySelector(".m10").onclick    = () => { v.currentTime -= 1.0; }
     this._shadowRoot.querySelector(".m01").onclick    = () => { v.currentTime -= 0.1; }
     this._shadowRoot.querySelector(".p01").onclick    = () => { v.currentTime += 0.1; }
     this._shadowRoot.querySelector(".p10").onclick    = () => { v.currentTime += 1.0; }
-    this._shadowRoot.querySelector(".zoom").onclick   = () => { this.zoom(); }
-    this._shadowRoot.querySelector(".reduce").onclick = () => { this.reduce(); }
+    this._shadowRoot.querySelector(".zoom").onclick   = () => this.zoom();
+    this._shadowRoot.querySelector(".reduce").onclick = () => this.reduce();
     this._shadowRoot.querySelector(".x01").onclick    = () => { v.playbackRate = 0.1; }
     this._shadowRoot.querySelector(".x10").onclick    = () => { v.playbackRate = 1.0; }
     this._shadowRoot.querySelector(".x20").onclick    = () => { v.playbackRate = 2.0; }
@@ -71,6 +71,17 @@ export class VideoController extends HTMLElement {
     if (v && v.duration) {
       this._shadowRoot.querySelector(".time").textContent =
           `${v.currentTime.toFixed(1)}/${v.duration.toFixed(1)}`;
+    }
+  }
+  togglePlay() {
+    const v = this._video;
+    const playing = v.currentTime > 0 && !v.paused && !v.ended && v.readyState > 2;
+    if (playing) {
+      setTimeout(() => v.pause(), 0);
+    } else {
+      setTimeout(() => v.play().catch(() => {
+        // IGNORE ERROR: Uncaught (in promise) DOMException: The play() request was interrupted by a call to pause().
+      }), 0);
     }
   }
   zoom(n = 1.5) {
@@ -90,4 +101,3 @@ export class VideoController extends HTMLElement {
 }
 
 customElements.define(VideoController.tag, VideoController);
-
