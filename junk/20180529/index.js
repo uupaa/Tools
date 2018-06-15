@@ -5,6 +5,7 @@ import { save, load } from "https://uupaa.github.io/Tools/junk/20180529/UserSele
 
 [...document.body.querySelectorAll("video")].forEach(v => {
   if (!v.getAttribute("hacked")) {
+    v.removeAttribute("controls");
     v.insertAdjacentHTML("afterend",
       `<div style="font-size: 300%" onclick="hack(this, this.previousElementSibling)">🎃</div>`);
   } else {
@@ -14,6 +15,7 @@ import { save, load } from "https://uupaa.github.io/Tools/junk/20180529/UserSele
 
 window.hack = (jack, video) => {
   jack.remove();
+  video.setAttribute("controls", "controls");
   video.insertAdjacentHTML("afterend", `<video-controller></video-controller>`);
   load();
   save();
